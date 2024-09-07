@@ -1,0 +1,97 @@
+body {
+    background-image: url(img/background.jpg);
+    background-repeat: no-repeat;    
+    background-position: center;
+    font-family: san serif;
+    padding: 20px;  
+   
+    }
+   
+h1 {
+    font-size:40px;
+    margin-top: 0px;
+    margin-bottom: 15px;
+}
+
+h2{
+    font-size: 30px;
+}
+
+.established{
+    font-style: italic;
+}
+
+h1,
+h2,
+p{
+    text-align:center;
+}
+
+.menu{
+    width: 80;
+    background-color: burlywood;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0px;
+    max-width:600px ;
+}
+
+hr{
+    height:1px ;
+    background-color: brown;
+    border-color: brown;
+}
+
+img{
+    display:block;
+    margin-right:auto;
+    margin-left:auto;
+}
+
+.bottomline{
+    margin-top: 25px;
+}
+
+h1,
+h2{
+    font-family: Impact, serif;
+}
+
+.item p{
+    display: inline block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 18px;
+}
+
+
+.price{
+    text-align: right;
+}
+
+footer{
+    font-size:14px;
+}
+
+.address{
+    margin-bottom: 15px; 
+}
+
+a{
+    color: black;
+    text-align: center;
+}
+
+a:visited{
+    color:black;
+}
+
+a:active{
+    color:brown;
+}
+
+a:hover{
+    color:brown;
+}
+
+
