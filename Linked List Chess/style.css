@@ -1,0 +1,189 @@
+/* Ensure the board container and timers are aligned nicely */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column; /* Align everything vertically */
+    justify-content: center;
+}
+
+/* For the timer container */
+#timers {
+    margin-top:0px; /* Increased margin for better spacing */
+    font-size: 18px; /* Adjusted overall font size for smaller text */
+    color: #333;
+    display: flex;
+    justify-content: space-between; /* Position timers on the left and right */
+    width: 100%; /* Full width to space them across the page */
+    padding: 0px; /* Add some padding on left and right for better spacing */
+    text-align: center;
+}
+
+/* Styling individual timers */
+#white-timer, #black-timer{
+    font-weight: bold; /* Make the timer text bold for better emphasis */
+    font-size: 24px; /* Smaller font size for the timer values */
+    display: inline-block;
+    margin: 10px; /* Add some margin around the timer */
+    padding: 3px 10px; /* Reduced padding for a smaller look */
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add subtle shadow for depth */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition for shadow */
+}
+
+/* Timer Hover Effect */
+#white-timer:hover, #black-timer:hover {
+    transform: scale(1.1); /* Slight scale effect on hover */
+    background-color: #f1f1f1;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+
+/* Chessboard Styling */
+#board {
+    width: 400px; /* Expanded width for the chessboard */
+    height: 400px; /* Ensure it remains square */
+    display: flex;
+    flex-wrap: wrap; /* Makes it easy to arrange squares */
+    margin: 0 auto;
+    background: #fff;
+    border: 3px solid #ddd; /* Slightly thicker border for the larger board */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Adjusted shadow for size */
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* Chess Squares */
+.chess-square {
+    width: calc(100% / 8); /* 8 squares per row */
+    height: calc(100% / 8); /* Ensure squares are equal in height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chess-square.light {
+    background-color: #f0d9b5; /* Light square color */
+}
+
+.chess-square.dark {
+    background-color: #b58863; /* Dark square color */
+}
+
+/* Move History Styling */
+#move-history {
+    margin-top: 20px;
+    max-height: 600px; /* Increased height for a larger move history */
+    width: 95%; /* Matches expanded board width */
+    text-align: left; /* Align moves to the left for better readability */
+    background: #ffffff;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    padding: 17px; /* Increased padding for a more spacious area */
+    color: #555;
+    font-size: 20px; /* Larger font for better readability */
+    overflow-y: auto;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Move List Styling */
+.move {
+    padding: 15px; /* Increased padding for each move */
+    border-bottom: 1px solid #efefef;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer; /* Show pointer to indicate it's clickable */
+}
+
+.move:hover {
+    background-color: #f9f9f9;
+}
+
+.move.selected {
+    background-color: #007BFF; /* Highlight selected move with blue */
+    color: white; /* Change text color to white */
+    font-weight: bold; /* Make the selected move bold */
+}
+
+
+/* Start Button Styling */
+#start-button {
+    padding: 12px 30px;
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#start-button:hover {
+    background-color: #218838;
+    transform: scale(1.1);
+}
+
+#start-button:active {
+    transform: scale(0.95);
+}
+
+/* Restart Button Styling */
+#restart-button {
+    padding: 12px 30px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #dc3545;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#restart-button:hover {
+    background-color: #c82333;
+    transform: scale(1.1);
+}
+
+#restart-button:active {
+    transform: scale(0.95);
+}
+
+/* Fade-in effect for elements */
+.fade-in {
+    opacity: 0;
+    animation: fadeInAnimation 1s forwards;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+

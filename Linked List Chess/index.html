@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="lib/chessboardjs/css/chessboard-0.3.0.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Multiplayer Chess</title>
+</head>
+<body>
+<div class="container">
+    <div id="timers" style="display:none;"> <!-- Initially hide timers -->
+        <div><strong>White Timer: </strong> <span id="white-timer">05:00</span></div>
+        <div><strong>Black Timer: </strong> <span id="black-timer">05:00</span></div>
+    </div>
+    <div id="board" class="board" style="display:none;"></div> <!-- Initially hidden board -->
+</div>
+
+<div class="info">
+    <div id="move-history" style="display:none;"> <!-- Initially hide move history -->
+        <h3>Move History</h3>
+        <ul id="history-list"></ul>
+    </div>
+    <div id="game-status">
+        <button id="start-button">Start</button> <!-- Start button -->
+        <button id="restart-button" style="display:none;">Play again</button> <!-- Restart button -->
+        <div id="status-message" style="color: red; font-weight: bold; margin-top: 10px; display:none;"></div> <!-- Status message -->
+    </div>
+</div>
+
+<script src="lib/jquery/jquery-3.2.1.min.js"></script>
+<script src="lib/chessboardjs/js/chess.js"></script>
+<script src="lib/chessboardjs/js/chessboard-0.3.0.js"></script>
+
+<script>
+    var board,
+        game = new Chess();
+
+    var whiteTime = 300; // 5 minutes in seconds
+    var blackTime = 300; // 5 minutes in seconds
+    var timerInterval;
+    var currentPlayer = 'white';
+
+    function updateTimers() {
+        document.getElementById('white-timer').textContent = formatTime(whiteTime);
+        document.getElementById('black-timer').textContent = formatTime(blackTime);
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const sec = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (currentPlayer === 'white') {
+                whiteTime--;
+                if (whiteTime <= 0) {
+                    clearInterval(timerInterval);
+                    endGame('Black wins! White ran out of time.');
+                }
+            } else {
+                blackTime--;
+                if (blackTime <= 0) {
+                    clearInterval(timerInterval);
+                    endGame('White wins! Black ran out of time.');
+                }
+            }
+            updateTimers();
+        }, 1000);
+    }
+
+    function endGame(message) {
+        document.getElementById('status-message').textContent = message;
+        document.getElementById('status-message').style.display = 'block';
+        document.getElementById('restart-button').style.display = 'block';
+    }
+
+    function renderMoveHistory(moves) {
+        const historyList = document.getElementById("history-list");
+        historyList.innerHTML = "";
+    
+        for (let i = 0; i < moves.length; i += 2) {
+            const moveItem = document.createElement("li");
+            moveItem.classList.add("move"); // Add 'move' class for styling
+            moveItem.innerHTML = `<strong>Move</strong> ${Math.floor(i / 2) + 1}: <strong>White</strong> -> ${moves[i]} <strong>Black</strong> -> ${moves[i + 1] || ""}`;
+
+            moveItem.addEventListener('click', function() {
+                // Toggle the 'selected' class on click
+                moveItem.classList.toggle("selected");
+            });
+
+            historyList.appendChild(moveItem);
+        }
+    }
+
+    function onDragStart(source, piece) {
+        if (game.game_over()) return false;
+        if ((currentPlayer === 'white' && piece.search(/^b/) !== -1) ||
+            (currentPlayer === 'black' && piece.search(/^w/) !== -1)) {
+            return false;
+        }
+    }
+
+    function onDrop(source, target) {
+        const move = game.move({
+            from: source,
+            to: target,
+            promotion: 'q'
+        });
+
+        if (move === null) return 'snapback';
+
+        renderMoveHistory(game.history());
+        board.position(game.fen());
+
+        // Check for check, checkmate, or stalemate
+        if (game.game_over()) {
+            if (game.in_checkmate()) {
+                const message = 'Checkmate! ' + (currentPlayer === 'black' ? 'Black' : 'White') + ' wins.';
+                endGame(message);
+                alert(message);
+            } else if (game.in_stalemate()) {
+                const message = 'Stalemate! The game is a draw.';
+                endGame(message);
+                alert(message);
+            } else if (game.in_threefold_repetition()) {
+                const message = 'Threefold repetition! The game is a draw.';
+                endGame(message);
+                alert(message);
+            } else if (game.insufficient_material()) {
+                const message = 'Insufficient material! The game is a draw.';
+                endGame(message);
+                alert(message);
+            } else if (game.in_check()) {
+                const message = (currentPlayer === 'white' ? 'White' : 'Black') + ' is in check!';
+                endGame(message);
+                alert(message);
+            }
+        }
+
+        // Switch player
+        currentPlayer = currentPlayer === 'white' ? 'black' : 'white';
+        startTimer();
+    }
+
+    function onSnapEnd() {
+        board.position(game.fen());
+    }
+
+    const cfg = {
+        draggable: true,
+        position: 'start',
+        onDragStart: onDragStart,
+        onDrop: onDrop,
+        onSnapEnd: onSnapEnd
+    };
+
+    board = ChessBoard('board', cfg);
+
+    // Start Game function
+    document.getElementById('start-button').addEventListener('click', function() {
+        // Hide the start button and show the board and timers
+        document.getElementById('start-button').style.display = 'none';
+        document.getElementById('board').style.display = 'block';
+        document.getElementById('timers').style.display = 'block';
+        document.getElementById('move-history').style.display = 'block';
+        document.getElementById('status-message').style.display = 'none'; // Hide status message
+
+        // Start the game
+        updateTimers();
+        startTimer();
+    });
+
+    // Restart Game functionality
+    document.getElementById('restart-button').addEventListener('click', function() {
+        game.reset();
+        whiteTime = 300; // Reset white timer to 5 minutes
+        blackTime = 300; // Reset black timer to 5 minutes
+        currentPlayer = 'white';
+        updateTimers();
+        startTimer();
+        document.getElementById('restart-button').style.display = 'none'; // Hide the restart button
+        document.getElementById('status-message').style.display = 'none'; // Hide status message
+        board.position(game.fen());
+    });
+
+</script>
+</body>
+</html>
